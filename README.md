@@ -30,7 +30,7 @@ canvas drawn naturally and rotated 270° before display.
 ```
 config/
   west.yml          # pulls in zmkfirmware/zmk
-  lily58.conf       # feature flags (display, HID indicators, split battery, WPM)
+  lily58.conf       # feature flags (display, HID indicators, split battery)
 build.yaml          # CI build matrix (left = custom screen, right = stock)
 zephyr/module.yml   # registers this repo as a module so the shield is found
 boards/shields/nice_duck_view/
@@ -96,8 +96,11 @@ ZMK APIs resolve. Flash `build/zephyr/zmk.uf2` to the left half.
 
 ## Notes
 
-- **Caps Lock** needs `CONFIG_ZMK_HID_INDICATORS=y` (already set).
-- **WPM** needs `CONFIG_ZMK_WPM=y` (already set).
+- **Caps Lock** needs `CONFIG_ZMK_HID_INDICATORS=y` (already set in `lily58.conf`).
+- **WPM** (`CONFIG_ZMK_WPM`) is central-only — enabling it on the peripheral is a
+  link error (`undefined reference to as_zmk_keycode_state_changed`). It's
+  `select`ed for the central build by `nice_duck_view`'s `Kconfig.defconfig`, not
+  set in `lily58.conf`.
 - **Peripheral battery** needs `CONFIG_ZMK_SPLIT_BLE_CENTRAL_BATTERY_LEVEL_FETCHING=y`
   (already set) and battery reporting on the right half.
 - Code in `widgets/util.c`, `widgets/bolt.c`, and the canvas/rotation approach are

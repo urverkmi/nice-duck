@@ -47,4 +47,14 @@ config NICE_DUCK_WIDGET_STATUS
 config NICE_DUCK_WIDGET_INVERTED
     bool "Invert custom status widget colors (white on black)"
 
+# WPM is only meaningful on the central (it owns the keymap and raises the
+# keycode events WPM counts). Enabling it on a peripheral pulls in wpm.c, which
+# references the central-only keycode_state_changed event -> link error.
+if !ZMK_SPLIT || ZMK_SPLIT_ROLE_CENTRAL
+
+config NICE_DUCK_WIDGET_STATUS
+    select ZMK_WPM
+
+endif
+
 endif # SHIELD_NICE_DUCK_VIEW
