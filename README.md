@@ -88,7 +88,7 @@ This repo is built by the **ZMK GitHub build action** (the matrix in
 To build a half locally with a ZMK west workspace:
 
 ```
-west build -b nice_nano -- -DSHIELD="lily58_left nice_view_adapter nice_duck_view"
+west build -b "nice_nano//zmk" -- -DSHIELD="lily58_left nice_view_adapter nice_duck_view"
 ```
 
 A clean link confirms there's no duplicate status-screen symbol and that all the
