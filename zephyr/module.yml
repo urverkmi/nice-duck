@@ -1,0 +1,5 @@
+# Registers this repository as a Zephyr/ZMK module so the `boards/shields`
+# directory in this repo is discovered during a build.
+build:
+  settings:
+    board_root: .

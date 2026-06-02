@@ -1,0 +1,50 @@
+# SPDX-License-Identifier: MIT
+#
+# Defaults applied when the nice_duck_view shield is in the build. Mirrors the
+# stock nice_view shield's display setup (1-bit color, dedicated work queue) and
+# turns on the custom status screen backed by our widget.
+
+if SHIELD_NICE_DUCK_VIEW
+
+config LS0XX_VCOM_THREAD_PRIO
+    default 11
+
+config LV_Z_VDB_SIZE
+    default 100
+
+config LV_DPI_DEF
+    default 161
+
+config LV_Z_BITS_PER_PIXEL
+    default 1
+
+choice LV_COLOR_DEPTH
+    default LV_COLOR_DEPTH_1
+endchoice
+
+choice ZMK_DISPLAY_WORK_QUEUE
+    default ZMK_DISPLAY_WORK_QUEUE_DEDICATED
+endchoice
+
+choice ZMK_DISPLAY_STATUS_SCREEN
+    default ZMK_DISPLAY_STATUS_SCREEN_CUSTOM
+endchoice
+
+config LV_Z_MEM_POOL_SIZE
+    default 8192
+
+config ZMK_DISPLAY_STATUS_SCREEN_CUSTOM
+    imply NICE_DUCK_WIDGET_STATUS
+
+config NICE_DUCK_WIDGET_STATUS
+    bool "Custom nice-duck status widget"
+    select LV_FONT_MONTSERRAT_14
+    select LV_FONT_MONTSERRAT_16
+    select LV_FONT_MONTSERRAT_18
+    select LV_USE_CANVAS
+    select LV_USE_IMAGE
+
+config NICE_DUCK_WIDGET_INVERTED
+    bool "Invert custom status widget colors (white on black)"
+
+endif # SHIELD_NICE_DUCK_VIEW

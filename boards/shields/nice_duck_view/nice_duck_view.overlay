@@ -1,0 +1,25 @@
+/*
+ * Sharp LS011B7DH03 memory LCD (the nice!view panel) on the SPI bus exposed by
+ * the nice_view_adapter shield. Adapted from the stock zmk nice_view shield.
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+&nice_view_spi {
+    status = "okay";
+    nice_view: ls0xx@0 {
+        compatible = "sharp,ls0xx";
+        spi-max-frequency = <1000000>;
+        reg = <0>;
+        width = <160>;
+        height = <68>;
+        serial-vcom-inversion;
+        serial-vcom-interval = <33>;
+    };
+};
+
+/ {
+    chosen {
+        zephyr,display = &nice_view;
+    };
+};
