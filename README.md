@@ -19,7 +19,7 @@ basic placeholder for each. Design the visuals on top of it — see
 |---------------|-------|
 | top    | central battery + charging, right-half battery, BLE/USB output symbol |
 | middle | Bluetooth profile circles (1–5, selected/connected/bonded), right-half link dot |
-| bottom | active layer, Caps Lock, Light (RGB/backlight) |
+| bottom | active layer, Caps Lock, WPM |
 
 The nice!view is a 160×68 Sharp memory LCD, 1-bit (black/white), mounted rotated —
 so the design space is effectively **68 wide × 160 tall**. Each zone is a 68×68
@@ -30,7 +30,7 @@ canvas drawn naturally and rotated 270° before display.
 ```
 config/
   west.yml          # pulls in zmkfirmware/zmk
-  lily58.conf       # feature flags (display, HID indicators, split battery, light)
+  lily58.conf       # feature flags (display, HID indicators, split battery, WPM)
 build.yaml          # CI build matrix (left = custom screen, right = stock)
 zephyr/module.yml   # registers this repo as a module so the shield is found
 boards/shields/nice_duck_view/
@@ -47,7 +47,8 @@ boards/shields/nice_duck_view/
     peripheral_status.c      # right-half link        (event)
     hid_status.c             # Caps Lock              (event)
     layer_status.c           # active layer           (event)
-    light_status.c           # light + peripheral battery (polled)
+    wpm_status.c             # typing speed (WPM)     (event)
+    poll_status.c            # peripheral battery     (polled)
   assets/                    # your converted graphics (+ how-to)
 docs/CUSTOMIZING.md          # step-by-step: graphics + binding to state
 ```
@@ -57,9 +58,8 @@ docs/CUSTOMIZING.md          # step-by-step: graphics + binding to state
 Every value follows the ZMK widget pattern: a small **state struct** → a
 **get_state()** that reads ZMK → an **update callback** that writes into the
 shared `struct status_state` and calls the right `draw_*`. Event-driven widgets
-use the `ZMK_DISPLAY_WIDGET_LISTENER` + `ZMK_SUBSCRIPTION` macros; values with no
-ZMK event (RGB, backlight, peripheral battery) are refreshed on a timer in
-`light_status.c`.
+use the `ZMK_DISPLAY_WIDGET_LISTENER` + `ZMK_SUBSCRIPTION` macros; the peripheral
+battery has no ZMK event, so it is refreshed on a timer in `poll_status.c`.
 
 ### The extraction APIs (cheat sheet)
 
@@ -73,21 +73,22 @@ ZMK event (RGB, backlight, peripheral battery) are refreshed on a timer in
 | Right-half link      | event `.connected`                                      | `zmk_split_peripheral_status_changed` |
 | Active layer         | `zmk_keymap_highest_layer_active()`, `zmk_keymap_layer_name()` | `zmk_layer_state_changed` |
 | Caps Lock            | `zmk_hid_indicators_get_current_profile() & BIT(1)`     | `zmk_hid_indicators_changed` |
-| RGB underglow        | `zmk_rgb_underglow_get_state(&on)`                      | *(polled)* |
-| Backlight            | `zmk_backlight_is_on()`, `zmk_backlight_get_brt()`      | *(polled)* |
+| WPM                  | `zmk_wpm_get_state()`                                   | `zmk_wpm_state_changed` |
 
 ## Build
 
 This repo is built by the **ZMK GitHub build action** (the matrix in
-`build.yaml`). Push to GitHub with the standard ZMK build workflow under
-`.github/workflows/` (copy it from the
-[zmk-config template](https://github.com/zmkfirmware/unified-zmk-config-template))
-and download the `.uf2` artifacts.
+`build.yaml`); just push and download the `.uf2` artifacts.
+
+> The included `.github/workflows/build.yml` tracks **`@main`**, and
+> `config/west.yml` pins zmk to `main`. They must stay in sync: the widget code
+> uses LVGL 9 / current ZMK APIs, so the older `@v0.3` workflow fails with
+> "Invalid BOARD; nice_nano_v2" (it can't parse main's newer board format).
 
 To build a half locally with a ZMK west workspace:
 
 ```
-west build -b nice_nano_v2 -- -DSHIELD="lily58_left nice_view_adapter nice_duck_view"
+west build -b nice_nano -- -DSHIELD="lily58_left nice_view_adapter nice_duck_view"
 ```
 
 A clean link confirms there's no duplicate status-screen symbol and that all the
@@ -95,10 +96,8 @@ ZMK APIs resolve. Flash `build/zephyr/zmk.uf2` to the left half.
 
 ## Notes
 
-- **"Light":** the widget compiles to nothing unless `CONFIG_ZMK_RGB_UNDERGLOW`
-  and/or `CONFIG_ZMK_BACKLIGHT` are enabled (commented out in `config/lily58.conf`
-  by default, since enabling them without the LEDs wired will fail the build).
 - **Caps Lock** needs `CONFIG_ZMK_HID_INDICATORS=y` (already set).
+- **WPM** needs `CONFIG_ZMK_WPM=y` (already set).
 - **Peripheral battery** needs `CONFIG_ZMK_SPLIT_BLE_CENTRAL_BATTERY_LEVEL_FETCHING=y`
   (already set) and battery reporting on the right half.
 - Code in `widgets/util.c`, `widgets/bolt.c`, and the canvas/rotation approach are

@@ -12,13 +12,13 @@ A task-oriented guide. For each parameter there are **two** places to touch:
 | Parameter            | Extraction file          | Updates on        | Drawn in    |
 |----------------------|--------------------------|-------------------|-------------|
 | Central battery      | `battery_status.c`       | event             | `draw_top`    |
-| Peripheral battery   | `light_status.c` (poll)  | timer (2 s)       | `draw_top`    |
+| Peripheral battery   | `poll_status.c` (poll)   | timer (2 s)       | `draw_top`    |
 | BLE/USB output       | `output_status.c`        | event             | `draw_top`    |
 | BT profile circles   | `output_status.c`        | event             | `draw_middle` |
 | Right-half link      | `peripheral_status.c`    | event             | `draw_middle` |
 | Active layer         | `layer_status.c`         | event             | `draw_bottom` |
 | Caps Lock            | `hid_status.c`           | event             | `draw_bottom` |
-| Light (RGB/backlight)| `light_status.c` (poll)  | timer (2 s)       | `draw_bottom` |
+| WPM                  | `wpm_status.c`           | event             | `draw_bottom` |
 
 > The three canvases are 68×68 squares rotated 270° at draw time. Everything in a
 > `draw_*` function is in natural (un-rotated) coordinates, origin top-left.
@@ -74,7 +74,7 @@ The value is already in `state` inside the `draw_*` function. Pick how to render
 - [ ] Copy an existing extraction file as a template:
       - has a ZMK event? copy `hid_status.c` (uses `ZMK_DISPLAY_WIDGET_LISTENER`
         + `ZMK_SUBSCRIPTION`).
-      - no event? add it to the poll loop in `light_status.c`.
+      - no event? add it to the poll loop in `poll_status.c`.
 - [ ] Point its `set_*` at the right `draw_*` canvas.
 - [ ] Declare its `nice_duck_<x>_status_init` in `widgets/status.h` and call it
       from `zmk_widget_status_init` in `status.c`.

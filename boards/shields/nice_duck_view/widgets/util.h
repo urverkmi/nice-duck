@@ -54,11 +54,8 @@ struct status_state {
     bool num_lock;
     bool scroll_lock;
 
-    // "Light" (polled — no ZMK event exists for these)
-    bool rgb_on;
-    uint8_t rgb_brightness; // 0..100
-    bool backlight_on;
-    uint8_t backlight_brightness; // 0..100
+    // Typing speed
+    uint8_t wpm;
 };
 
 void rotate_canvas(lv_obj_t *canvas);

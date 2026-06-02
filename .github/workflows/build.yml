@@ -3,4 +3,8 @@ on: [push, pull_request, workflow_dispatch]
 
 jobs:
   build:
-    uses: zmkfirmware/zmk/.github/workflows/build-user-config.yml@v0.3
+    # Must track 'main': the custom widget code uses LVGL 9 / current ZMK APIs,
+    # and config/west.yml pins zmk to main. The @v0.3 workflow ships an older
+    # toolchain that can't parse main's hardware-model-v2 board format
+    # (symptom: "Invalid BOARD; nice_nano_v2").
+    uses: zmkfirmware/zmk/.github/workflows/build-user-config.yml@main

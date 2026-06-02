@@ -2,8 +2,11 @@
 # Left (central) gets our custom screen; right (peripheral) keeps the stock
 # nice!view widget for now. `nice_view_adapter` remaps the OLED header pins to
 # the SPI bus the nice!view expects.
+# On ZMK main (hardware-model-v2) the board is `nice_nano` and defaults to
+# revision 2.0.0 (the nice!nano v2 hardware). The old `nice_nano_v2` name was
+# removed; use `nice_nano@1.0.0` only if you actually have a v1.
 include:
-  - board: nice_nano_v2
+  - board: nice_nano
     shield: lily58_left nice_view_adapter nice_duck_view
-  - board: nice_nano_v2
+  - board: nice_nano
     shield: lily58_right nice_view_adapter nice_view

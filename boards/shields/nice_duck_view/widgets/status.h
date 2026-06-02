@@ -36,7 +36,7 @@ extern sys_slist_t nice_duck_widgets;
  *
  *   draw_top    -> central + peripheral battery, BLE/USB output symbol
  *   draw_middle -> Bluetooth profile circles, right-half link dot
- *   draw_bottom -> active layer, Caps Lock, Light status
+ *   draw_bottom -> active layer, Caps Lock, WPM
  */
 void draw_top(lv_obj_t *widget, const struct status_state *state);
 void draw_middle(lv_obj_t *widget, const struct status_state *state);
@@ -48,4 +48,5 @@ void nice_duck_output_status_init(void);
 void nice_duck_peripheral_status_init(void);
 void nice_duck_hid_status_init(void);
 void nice_duck_layer_status_init(void);
-void nice_duck_light_status_init(void);
+void nice_duck_wpm_status_init(void);
+void nice_duck_poll_status_init(void);

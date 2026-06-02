@@ -6,7 +6,7 @@
  * Canvas layout (each is a 68x68 square, drawn naturally then rotated 270):
  *   top    (child 0): central battery, peripheral battery, BLE/USB symbol
  *   middle (child 1): Bluetooth profile circles + right-half link dot
- *   bottom (child 2): active layer, Caps Lock, Light
+ *   bottom (child 2): active layer, Caps Lock, WPM
  *
  * SPDX-License-Identifier: MIT
  */
@@ -130,9 +130,10 @@ void draw_bottom(lv_obj_t *widget, const struct status_state *state) {
         canvas_draw_text(canvas, 0, 24, 68, &label_dsc, "CAPS");
     }
 
-    // Light (RGB underglow and/or backlight).
-    bool light_on = state->rgb_on || state->backlight_on;
-    canvas_draw_text(canvas, 0, 46, 68, &label_dsc, light_on ? LV_SYMBOL_EYE_OPEN : "");
+    // Words per minute.
+    char wpm_text[12] = {};
+    snprintf(wpm_text, sizeof(wpm_text), "%d WPM", state->wpm);
+    canvas_draw_text(canvas, 0, 46, 68, &label_dsc, wpm_text);
 
     rotate_canvas(canvas);
 }
@@ -162,7 +163,8 @@ int zmk_widget_status_init(struct zmk_widget_status *widget, lv_obj_t *parent) {
     nice_duck_peripheral_status_init();
     nice_duck_hid_status_init();
     nice_duck_layer_status_init();
-    nice_duck_light_status_init();
+    nice_duck_wpm_status_init();
+    nice_duck_poll_status_init();
 
     return 0;
 }
