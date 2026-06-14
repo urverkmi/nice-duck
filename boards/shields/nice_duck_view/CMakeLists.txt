@@ -18,6 +18,13 @@ if(CONFIG_ZMK_DISPLAY AND CONFIG_NICE_DUCK_WIDGET_STATUS)
     zephyr_library_sources(widgets/layer_status.c)
     zephyr_library_sources(widgets/wpm_status.c)
     zephyr_library_sources(widgets/poll_status.c)
+    zephyr_library_sources(widgets/duck_status.c)
+    zephyr_library_sources(assets/duck_idle.c)
+    zephyr_library_sources(assets/layer_1.c)
+    zephyr_library_sources(assets/layer_2.c)
+    zephyr_library_sources(assets/layer_3.c)
+    zephyr_library_sources(assets/layer_4.c)
+    zephyr_library_sources(assets/layer_5.c)
 
     # Your designed bitmaps (see assets/README.md) get added here, e.g.:
     # zephyr_library_sources(assets/example_icon.c)

@@ -1,0 +1,10 @@
+# Desktop simulator (sim/) — keep the source, ignore the rest.
+# CMake build cache: fully regenerable with `cmake --build`.
+sim/build/
+
+# Vendored LVGL library: regenerable with the git clone in sim/README.md.
+sim/lvgl/
+
+# Generated preview images from the sim's SIM_PNG / SIM_DUCK modes.
+sim/*.ppm
+sim/*.png

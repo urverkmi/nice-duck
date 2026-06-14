@@ -26,7 +26,7 @@ struct layer_status_state {
 static void set_layer_status(struct zmk_widget_status *widget, struct layer_status_state state) {
     widget->state.layer_index = state.index;
     widget->state.layer_label = state.label;
-    draw_bottom(widget->obj, &widget->state);
+    draw_middle(widget->obj, &widget->state); // layer drives the duck's hat
 }
 
 static void layer_status_update_cb(struct layer_status_state state) {

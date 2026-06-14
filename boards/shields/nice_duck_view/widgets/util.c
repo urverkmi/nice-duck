@@ -24,6 +24,17 @@ void rotate_canvas(lv_obj_t *canvas) {
                       LV_DISPLAY_ROTATION_270, CANVAS_COLOR_FORMAT);
 }
 
+void rotate_canvas_into(lv_obj_t *canvas, uint8_t *src, uint8_t *dst, lv_coord_t src_w,
+                        lv_coord_t src_h) {
+    const uint32_t src_stride = lv_draw_buf_width_to_stride(src_w, CANVAS_COLOR_FORMAT);
+    const uint32_t dst_stride = lv_draw_buf_width_to_stride(src_h, CANVAS_COLOR_FORMAT);
+    lv_draw_sw_rotate(src, dst, src_w, src_h, src_stride, dst_stride, LV_DISPLAY_ROTATION_270,
+                      CANVAS_COLOR_FORMAT);
+
+    // After a 270 rotation the displayed size is the swapped src dimensions.
+    lv_canvas_set_buffer(canvas, dst, src_h, src_w, CANVAS_COLOR_FORMAT);
+}
+
 void draw_battery(lv_obj_t *canvas, lv_coord_t x, lv_coord_t y, uint8_t level, bool charging) {
     lv_draw_rect_dsc_t rect_black_dsc;
     init_rect_dsc(&rect_black_dsc, LVGL_BACKGROUND);

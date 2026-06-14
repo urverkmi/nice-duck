@@ -50,3 +50,4 @@ void nice_duck_hid_status_init(void);
 void nice_duck_layer_status_init(void);
 void nice_duck_wpm_status_init(void);
 void nice_duck_poll_status_init(void);
+void nice_duck_duck_status_init(void);
